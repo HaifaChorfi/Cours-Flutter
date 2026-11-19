@@ -254,14 +254,62 @@ double get prixFinal => prixApresReduction;`),Q(`Que fait InkWell autour de la C
 IconButton(
   onPressed: () => setState(() => _quantite++),
   icon: const Icon(Icons.add_circle_outline),
-),`),Q(`À quoi sert mounted après un await dans une méthode de State ?`,[`À vérifier que l'écran existe toujours avant d'utiliser setState ou context`,`À mesurer le temps d'attente`,`À annuler l'appel await`,`À empiler l'écran sur la pile`],0,`Pendant l'attente, l'écran a pu être fermé. mounted vaut false dans ce cas : on évite d'utiliser un State qui n'existe plus.`,`if (quantite != null && mounted) {
-  _ajouter(p, quantite);
-}`),Q(`Quelle zone d'un ListTile affiche un widget à droite de la ligne (par exemple une flèche) ?`,[`leading`,`title`,`subtitle`,`trailing`],3,`leading : à gauche ; title et subtitle : au centre ; trailing : à droite.`,`ListTile(
+),`),Q(`Dans la grille, une carte affiche « A RenderFlex overflowed by 24 pixels on the bottom ». Quelle est la correction ?`,[`Remplacer GridView.builder par Column`,`Supprimer le filtre « Promotions seulement »`,`Augmenter mainAxisExtent pour donner plus de hauteur à chaque cellule`,`Ajouter un Expanded autour de la grille`],2,`Chaque cellule a une hauteur fixe (mainAxisExtent). Si le contenu de la carte (image, texte, bouton) est plus haut, il déborde. On augmente mainAxisExtent (par exemple de 300 à 330) ou on réduit le contenu. Expanded, lui, sert à donner une hauteur à la grille dans une Column.`,`gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+  maxCrossAxisExtent: 220,
+  mainAxisExtent: 300, // hauteur fixe d'une cellule
+  mainAxisSpacing: 12,
+  crossAxisSpacing: 12,
+),`),Q(`Quelle zone d'un ListTile affiche un widget à droite de la ligne (par exemple une flèche) ?`,[`leading`,`title`,`subtitle`,`trailing`],3,`leading : à gauche ; title et subtitle : au centre ; trailing : à droite.`,`ListTile(
   leading: CircleAvatar(...),
   title: Text(p.nom),
   subtitle: Text('\${p.prixFinal} DT'),
   trailing: const Icon(Icons.chevron_right),
-)`)]}],RC=`
+)`)]},{id:`qcm5`,titre:`QCM 5 — API REST & FutureBuilder`,sous:`TP5 · Séance 5 · 10 questions tirées au hasard · 35 s par question`,limit:35,pick:10,revision:!0,questions:[Q(`Dans la réponse de https://dummyjson.com/products?limit=5, que contient la racine du JSON et où se trouve la liste des produits ?`,[`Un tableau [ ] directement composé des produits`,`Un objet { } dont la clé « items » contient la liste`,`Un objet { } dont la clé « products » contient le tableau des produits`,`Du texte HTML à analyser`],2,`La racine est un objet { } : il contient notamment « products » (le tableau de produits), « total », « skip » et « limit ». C'est pourquoi ApiService lit data['products'].`,`{
+  "products": [
+    { "title": "...", "price": 9.99, ... },
+    ...
+  ],
+  "total": 194,
+  "skip": 0,
+  "limit": 5
+}`),Q(`Quelle correspondance entre les clés JSON de DummyJSON et les attributs de Produit utilise fromJson ?`,[`nom ← json['name'], prix ← json['cost'], image ← json['picture']`,`nom ← json['title'], prix ← json['price'], image ← json['thumbnail']`,`nom ← json['label'], prix ← json['amount'], image ← json['url']`,`nom ← json['title'], prix ← json['price'], image ← json['photo']`],1,`L'API nomme le nom « title », le prix « price » et l'image « thumbnail ». La remise vient de « discountPercentage ».`),Q(`Quelle commande ajoute le package http au projet Flutter ?`,[`flutter pub add http`,`flutter install http`,`dart get http`,`flutter create http`],0,`flutter pub add http ajoute la ligne http: dans la section dependencies de pubspec.yaml et télécharge le package.`),Q(`Que signifie « import 'package:http/http.dart' as http; » ?`,[`Le package est téléchargé à chaque exécution`,`Il remplace l'import dart:convert`,`Il crée une classe nommée http dans le projet`,`Le package est importé et ses fonctions s'utilisent avec le préfixe http. (http.get, http.post…)`],3,`« as http » regroupe les fonctions du package sous le préfixe http. On écrit donc http.get(...). dart:convert, lui, fournit jsonDecode.`),Q(`Que fait jsonDecode(response.body) ?`,[`Il envoie la requête au serveur`,`Il transforme une Map Dart en texte JSON`,`Il transforme le texte JSON reçu en Map / List Dart`,`Il vérifie le code de statut de la réponse`],2,`Le serveur envoie du texte. jsonDecode le convertit en Map<String, dynamic> et en List, que l'on peut parcourir (data['products']).`),Q(`Pourquoi fromJson est-il un constructeur factory ?`,[`Parce qu'il peut renvoyer une instance d'une sous-classe : ProduitPromo ou Produit selon la remise`,`Parce qu'il s'exécute plus vite qu'un constructeur normal`,`Parce qu'il est obligatoire pour lire du JSON`,`Parce qu'il évite d'écrire le mot required`],0,`Un constructeur normal renvoie toujours une instance de sa propre classe. Un factory peut choisir : ici un ProduitPromo si la remise est d'au moins 10 %, un Produit sinon.`,`factory Produit.fromJson(Map<String, dynamic> json) {
+  ...
+  if (remise >= 10) {
+    return ProduitPromo(...);
+  } else {
+    return Produit(...);
+  }
+}`),Q(`Que renvoie Produit.fromJson pour un produit dont discountPercentage vaut 7.5 ?`,[`Un ProduitPromo avec reduction = 8`,`Un Produit normal, car 7.5 est inférieur à 10`,`Un ProduitPromo avec reduction = 7`,`Une erreur de type`],1,`Le test est remise >= 10. Avec 7.5, on passe dans le else : un Produit normal, sans badge PROMO.`,`double remise = json['discountPercentage'].toDouble();
+if (remise >= 10) {
+  return ProduitPromo(..., reduction: remise.round());
+} else {
+  return Produit(...);
+}`),Q(`Que fait « await http.get(Uri.parse(url)) » dans fetchProduits ?`,[`Il bloque toute l'application jusqu'à la réponse`,`Il envoie la requête puis continue sans attendre`,`Il relance la requête toutes les secondes`,`Il suspend la fonction jusqu'à la réponse du serveur, sans bloquer l'interface`],3,`await suspend seulement la fonction async ; l'interface reste fluide. Uri.parse(url) transforme l'adresse en objet Uri.`),Q(`Que se passe-t-il si le serveur ne répond pas au bout des 10 secondes de .timeout(const Duration(seconds: 10)) ?`,[`Le Future renvoie une liste vide`,`L'application se ferme`,`Le Future échoue avec une exception au lieu d'attendre indéfiniment`,`La requête est relancée automatiquement`],2,`Sans réponse dans le délai, timeout fait échouer le Future. FutureBuilder passe alors à l'état d'erreur (snapshot.hasError) et affiche « Réessayer ».`),Q(`Pourquoi lève-t-on une exception quand response.statusCode != 200 ?`,[`Pour fermer la connexion au serveur`,`Pour que le Future échoue et que FutureBuilder affiche l'état d'erreur`,`Pour convertir le JSON plus vite`,`Pour changer l'adresse de l'API`],1,`Le code 200 signifie « succès ». Pour tout autre code (404, 500…), on lève une exception : le Future échoue et l'écran affiche le message d'erreur et le bouton Réessayer.`,`if (response.statusCode != 200) {
+  throw Exception('Erreur serveur : \${response.statusCode}');
+}`),Q(`Quelle condition détecte l'état « chargement » dans le builder d'un FutureBuilder ?`,[`snapshot.connectionState == ConnectionState.waiting`,`snapshot.hasError`,`snapshot.data != null`,`snapshot.hasData == false && snapshot.hasError`],0,`Les trois états : chargement (connectionState == waiting), erreur (hasError) et succès (data contient la liste). On les teste dans cet ordre.`,`builder: (context, snapshot) {
+  if (snapshot.connectionState == ConnectionState.waiting) {
+    return const Center(child: CircularProgressIndicator());
+  }
+  if (snapshot.hasError) return _buildErreur();
+  ...
+}`),Q(`Pourquoi crée-t-on le Future dans initState plutôt que dans la méthode build ?`,[`Parce que initState est plus rapide que build`,`Parce que build ne peut pas être async`,`Parce que FutureBuilder n'accepte que des Future créés dans initState`,`Parce que build s'exécute à chaque setState : la requête réseau serait relancée à chaque fois`],3,`initState est appelé une seule fois, à la création de l'écran. Dans build, chaque setState (filtre, recherche…) relancerait une requête. On garde donc le Future dans une variable.`,`late Future<List<Produit>> _futureProduits;
+
+@override
+void initState() {
+  super.initState();
+  _futureProduits = ApiService.fetchProduits();
+}`),Q(`Pourquoi _recharger affecte-t-il un nouveau Future à l'intérieur de setState ?`,[`Pour supprimer l'ancien Future de la mémoire`,`Pour éviter d'écrire await`,`Pour que FutureBuilder reçoive un nouveau Future, repasse par l'état de chargement et relance la requête`,`Pour trier les produits reçus`],2,`FutureBuilder observe le Future qu'on lui donne. Un nouveau Future dans setState : l'écran est reconstruit, le FutureBuilder repart en état waiting puis affiche succès ou erreur.`,`void _recharger() {
+  setState(() {
+    _futureProduits = ApiService.fetchProduits();
+  });
+}`),Q(`À quoi sert « snapshot.data ?? [] » dans le cas « succès » ?`,[`À trier la liste reçue`,`À obtenir une liste vide si data vaut null, pour ne pas planter`,`À copier la liste dans une nouvelle variable`,`À afficher un message d'erreur`],1,`snapshot.data est de type List<Produit>? (peut être null). L'opérateur ?? donne la valeur de droite quand celle de gauche est null.`,`final visibles = _filtrer(snapshot.data ?? []);`),Q(`Quelle adresse ApiService appelle-t-il pour chercher « phone » ?`,[`https://dummyjson.com/products/search?q=phone`,`https://dummyjson.com/products?search=phone`,`https://dummyjson.com/search/products/phone`,`https://dummyjson.com/products?limit=phone`],0,`DummyJSON propose la route /products/search avec le paramètre q. La réponse a la même structure que /products : la clé « products » contient la liste.`,`if (recherche.isEmpty) {
+  url = 'https://dummyjson.com/products?limit=20';
+} else {
+  url = 'https://dummyjson.com/products/search?q=$recherche';
+}`),Q(`L'utilisateur cherche « zzz », mot absent de l'API. Que se passe-t-il à l'écran ?`,[`L'état d'erreur s'affiche avec le bouton Réessayer`,`L'indicateur de chargement tourne indéfiniment`,`La requête réussit avec une liste vide : le message « Aucun produit trouvé » s'affiche`,`L'application plante`],2,`Le serveur répond 200 avec products: []. Ce n'est pas une erreur : c'est un succès avec une liste vide, que le code traite avec un message au lieu d'une grille vide.`,`final visibles = _filtrer(snapshot.data ?? []);
+if (visibles.isEmpty) {
+  return const Center(child: Text('Aucun produit trouvé'));
+}`)]}],RC=`
 *{box-sizing:border-box}body{margin:0}
 .app{min-height:100vh;background:#0b1e3a;color:#e8eef9;font-family:system-ui,Segoe UI,Roboto,sans-serif}
 .top{display:flex;align-items:center;gap:10px;padding:12px 18px;background:#081529;border-bottom:1px solid #1d3557}
